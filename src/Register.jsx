@@ -1,30 +1,42 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      await axios.post("http://localhost:5000/api/auth/anmelden", {
+        username,
         email,
         password,
       });
-      localStorage.setItem("token", res.data.token);
-      navigate("/chat");
+      setSuccess("تم إنشاء الحساب! يمكنك تسجيل الدخول الآن.");
+      setError("");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || "حدث خطأ");
+      setSuccess("");
     }
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleRegister}>
+      <input
+        type="text"
+        placeholder="اسم المستخدم"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+      />
       <input
         type="email"
         placeholder="البريد الإلكتروني"
@@ -39,11 +51,9 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      <button type="submit">تسجيل الدخول</button>
+      <button type="submit">تسجيل حساب</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <p>
-        لا تملك حساب؟ <Link to="/register">سجل هنا</Link>
-      </p>
+      {success && <p style={{ color: "green" }}>{success}</p>}
     </form>
   );
 }

@@ -1,27 +1,17 @@
-// src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Register from "./Register";
 import Login from "./Login";
-import Anmelden from "./anmelden";
 import Chat from "./Chat";
-import ProtectedRoute from "./ProtectedRoute";
 
-
-export default function App() {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/anmelden" element={<Anmelden/>} />
-        <Route 
-          path="/chat"
-          element={
-            <ProtectedRoute>
-              <Chat />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" />} /> {/* يوجه مباشرة لصفحة تسجيل الدخول */}
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/chat" element={<Chat />} />
+    </Routes>
   );
 }
 
+export default App;
